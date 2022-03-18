@@ -1,5 +1,7 @@
 # B2C-Custom-Policy
 
+Update "TenantId" and "PublicPolicyUri" in the header
+
 For Azure China, authentication endpoint need to updated as below
 
 In the TrustFrameworkBase.xml, update the TechnicalProfile "login-NonInteractive":
