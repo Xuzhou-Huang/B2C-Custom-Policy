@@ -1,5 +1,7 @@
 # B2C-Custom-Policy
 
+https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/tree/main/LocalAccounts
+
 IdentityExperienceFramework
 https://xuzhoub2c.b2clogin.cn/xuzhoub2c.partner.onmschina.cn
 
