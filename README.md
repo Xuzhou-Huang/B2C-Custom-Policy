@@ -12,7 +12,7 @@
 <Item Key="authorization_endpoint">https://login.chinacloudapi.cn/{tenant}/oauth2/token</Item>
 ```
 
-## Local Account SignInSignUp
+## Local Account SignIn Or SignUp
 
 ### Official Sample
 
@@ -22,15 +22,29 @@ https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/
 
 #### User SignIn
 
-SelfAsserted-LocalAccountSignin-Email
-
 | Orchestration Step  | Technical Policy |
 | :------------ |:---------------:|
 | 1 | SelfAsserted-LocalAccountSignin-Email |
 | 3 | AAD-UserReadUsingObjectId |
 | 4 | JwtIssuer     |
 
-LocalAccountSignUpWithLogonEmail
+#### User SignUp
+
+##### Hide SignUpLink
+
+Add the following metadata in TechnicalProfile "SelfAsserted-LocalAccountSignin-Email" to hide the SignUp link:
+
+```xml
+ <Item Key="setting.showSignupLink">false</Item>
+```
+
+##### Set SignUpTarget
+
+Metadata "SignUpTarget" of TechnicalProfile "SelfAsserted-LocalAccountSignin-Email" -- points to the Sign Up ClaimsExchange Id in a subsequent orchestrations step.
+```xml
+<Item Key="SignUpTarget">SignUpWithLogonEmailExchange</Item>
+```
+This enables the Sign Up link on the Combined Sign in and Sign up page to call the claims exchange in Orchestration Step 2, which consequently executes the LocalAccountSignUpWithLogonEmail technical profile.
 
 | Orchestration Step  | Technical Policy |
 | :------------ |:---------------:|
