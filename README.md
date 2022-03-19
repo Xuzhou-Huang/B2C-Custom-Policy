@@ -63,3 +63,9 @@ https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/
 ### Doc for Phone Factor
 
 https://docs.microsoft.com/en-us/azure/active-directory-b2c/phone-factor-technical-profile
+
+## Link Social Account with Local Account
+
+https://docs.microsoft.com/en-us/azure/active-directory-b2c/social-transformations
+https://stackoverflow.com/questions/57109641/linking-multiple-social-accounts-to-azur-b2c-local-account-through-custom-polici
+https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/blob/main/SocialAccounts/TrustFrameworkBase.xml#L458
