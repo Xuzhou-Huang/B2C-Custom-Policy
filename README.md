@@ -1,4 +1,4 @@
-# B2C-Custom-Policy
+# B2C Custom Policy
 
 ## Modifications for Azure China
      
