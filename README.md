@@ -30,6 +30,12 @@ https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/
 
 #### User SignUp
 
+| Orchestration Step  | Technical Policy |
+| :------------ |:---------------:|
+| 2 | LocalAccountSignUpWithLogonEmail |
+| 3 | AAD-UserReadUsingObjectId |
+| 4 | JwtIssuer     |
+
 ##### Hide SignUpLink
 
 Add the following metadata in TechnicalProfile "SelfAsserted-LocalAccountSignin-Email" to hide the SignUp link:
@@ -45,10 +51,3 @@ Metadata "SignUpTarget" of TechnicalProfile "SelfAsserted-LocalAccountSignin-Ema
 <Item Key="SignUpTarget">SignUpWithLogonEmailExchange</Item>
 ```
 This enables the Sign Up link on the Combined Sign in and Sign up page to call the claims exchange in Orchestration Step 2, which consequently executes the LocalAccountSignUpWithLogonEmail technical profile.
-
-| Orchestration Step  | Technical Policy |
-| :------------ |:---------------:|
-| 2 | LocalAccountSignUpWithLogonEmail |
-| 3 | AAD-UserReadUsingObjectId |
-| 4 | JwtIssuer     |
-
