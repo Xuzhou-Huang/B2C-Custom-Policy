@@ -51,3 +51,15 @@ Metadata "SignUpTarget" of TechnicalProfile "SelfAsserted-LocalAccountSignin-Ema
 <Item Key="SignUpTarget">SignUpWithLogonEmailExchange</Item>
 ```
 This enables the Sign Up link on the Combined Sign in and Sign up page to call the claims exchange in Orchestration Step 2, which consequently executes the LocalAccountSignUpWithLogonEmail technical profile.
+
+## Local Account SignIn With MFA
+
+Require MFA after user sign-in, enroll and validate phone number.
+
+### Official Sample
+
+https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/blob/main/SocialAndLocalAccountsWithMfa/TrustFrameworkBase.xml
+
+### Doc for Phone Factor
+
+https://docs.microsoft.com/en-us/azure/active-directory-b2c/phone-factor-technical-profile
