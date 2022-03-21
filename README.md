@@ -64,6 +64,23 @@ https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/
 
 https://docs.microsoft.com/en-us/azure/active-directory-b2c/phone-factor-technical-profile
 
+## Phone SignIn and SignUp (passwordless)
+
+It has to do with the order that these children appear in BuildingBlocks, referring to the order listed here: https://docs.microsoft.com/en-us/azure/active-directory-b2c/buildingblocks. Otherwise, there would be errors like "The element 'BuildingBlocks' in namespace 'http://schemas.microsoft.com/online/cpim/schemas/2013/06' has invalid child element 'Predicates' in namespace 'http://schemas.microsoft.com/online/cpim/schemas/2013/06'. "
+
+```xml
+<BuildingBlocks>
+    <ClaimsSchema>...</ClaimsSchema>
+    <Predicates>...</Predicates>
+    <PredicateValidations>...</PredicateValidations>
+    <ClaimsTransformations>...</ClaimsTransformations>
+    <ContentDefinitions>...</ContentDefinitions>
+    <Localization>...</Localization>
+    <DisplayControls>...</DisplayControls>
+    <InputValidations>...</InputValidations>
+</BuildingBlocks>
+```
+
 ## Link Social Account with Local Account
 
 https://docs.microsoft.com/en-us/azure/active-directory-b2c/social-transformations
