@@ -102,6 +102,9 @@ It has to do with the order that these children appear in BuildingBlocks, referr
 </ClaimType>
 ```
 
+![image](https://user-images.githubusercontent.com/96280581/159387155-61ced03a-a74a-43b7-a7e3-87b2af2fce69.png)
+
+
 ## Link Social Account with Local Account
 
 https://docs.microsoft.com/en-us/azure/active-directory-b2c/social-transformations
