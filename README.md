@@ -85,6 +85,20 @@ It has to do with the order that these children appear in BuildingBlocks, referr
 </BuildingBlocks>
 ```
 
+```xml
+<ClaimType Id="countryCode">
+     <DisplayName>Phone Number</DisplayName>
+     <DataType>string</DataType>
+     <UserHelpText>Phone Number</UserHelpText>
+     <UserInputType>DropdownSingleSelect</UserInputType>
+     <Restriction>
+          ...
+          <Enumeration Text="China(+86)" Value="CN" SelectByDefault="true"/>
+          ...
+     </Restriction>
+</ClaimType>
+```
+
 ## Link Social Account with Local Account
 
 https://docs.microsoft.com/en-us/azure/active-directory-b2c/social-transformations
