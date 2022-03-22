@@ -70,6 +70,8 @@ https://docs.microsoft.com/en-us/azure/active-directory-b2c/phone-factor-technic
 
 https://github.com/azure-ad-b2c/samples/tree/master/policies/signup-signin-with-phone-number
 
+### Tips for policy editing
+
 It has to do with the order that these children appear in BuildingBlocks, referring to the order listed here: https://docs.microsoft.com/en-us/azure/active-directory-b2c/buildingblocks. Otherwise, there would be errors like "The element 'BuildingBlocks' in namespace 'http://schemas.microsoft.com/online/cpim/schemas/2013/06' has invalid child element 'Predicates' in namespace 'http://schemas.microsoft.com/online/cpim/schemas/2013/06'. "
 
 ```xml
@@ -84,6 +86,7 @@ It has to do with the order that these children appear in BuildingBlocks, referr
     <InputValidations>...</InputValidations>
 </BuildingBlocks>
 ```
+#### How to setup default selection
 
 ```xml
 <ClaimType Id="countryCode">
