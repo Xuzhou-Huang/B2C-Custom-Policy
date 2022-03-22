@@ -101,9 +101,19 @@ It has to do with the order that these children appear in BuildingBlocks, referr
      </Restriction>
 </ClaimType>
 ```
+China phone number has 11 digits, so claim "nationalNumber" needs to be updated as "RegularExpression="^[0-9]{1,11}$"".
 
-![image](https://user-images.githubusercontent.com/96280581/159387155-61ced03a-a74a-43b7-a7e3-87b2af2fce69.png)
-
+```xml
+ <ClaimType Id="nationalNumber">
+   <DisplayName>Enter Phone Number</DisplayName>
+   <DataType>string</DataType>
+   <UserHelpText>Enter Phone Number</UserHelpText>
+   <UserInputType>TextBox</UserInputType>
+   <Restriction>
+     <Pattern RegularExpression="^[0-9]{1,11}$" HelpText="" />
+   </Restriction>
+ </ClaimType>
+```
 
 ## Link Social Account with Local Account
 
