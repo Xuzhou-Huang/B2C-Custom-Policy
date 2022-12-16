@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TrustFrameworkPolicy
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06"
+  PolicySchemaVersion="0.3.0.0"
+  TenantId="xuzhoub2c.partner.onmschina.cn"
+  PolicyId="B2C_1A_MultiTenant_signup_signin"
+  PublicPolicyUri="http://xuzhoub2c.partner.onmschina.cn/B2C_1A_MultiTenant_signup_signin"
+  DeploymentMode="Development"
+  UserJourneyRecorderEndpoint="urn:journeyrecorder:applicationinsights"
+>
+
+  <BasePolicy>
+    <TenantId>xuzhoub2c.partner.onmschina.cn</TenantId>
+    <PolicyId>B2C_1A_TrustFramework_Ext_SocialAccount</PolicyId>
+  </BasePolicy>
+
+<ClaimsProviders>
+
+    <ClaimsProvider>
+        <Domain>MultiTenant-AAD</Domain>
+        <DisplayName>Common AAD</DisplayName>
+        <TechnicalProfiles>
+            <TechnicalProfile Id="MultiTenant-AADCommon-OpenIdConnect">
+            <DisplayName>Multi-Tenant AAD</DisplayName>
+            <Description>Login with your mcpod/aadfederation account</Description>
+            <Protocol Name="OpenIdConnect"/>
+            <Metadata>
+                <Item Key="METADATA">https://login.chinacloudapi.cn/common/.well-known/openid-configuration</Item>
+                <!-- Update the Client ID below to the Application ID -->
+                <Item Key="client_id">96ff1843-f8bb-4f83-a9c7-aac7c51c9f22</Item>
+                <Item Key="response_types">code</Item>
+                <Item Key="scope">openid profile</Item>
+                <Item Key="response_mode">form_post</Item>
+                <Item Key="HttpBinding">POST</Item>
+                <Item Key="UsePolicyInRedirectUri">false</Item>
+                <Item Key="DiscoverMetadataByTokenIssuer">true</Item>
+                <!-- The key below allows you to specify each of the Azure AD tenants that can be used to sign in. Update the GUIDs below for each tenant. -->
+                <Item Key="ValidTokenIssuerPrefixes">https://sts.chinacloudapi.cn/954ddad8-66d7-47a8-8f9f-1316152d9587,https://sts.chinacloudapi.cn/97195526-9d7c-4cd8-90b1-36faa3980a03</Item>
+                <!-- The commented key below specifies that users from any tenant can sign-in. Uncomment if you would like anyone with an Azure AD account to be able to sign in. -->
+                <!-- <Item Key="ValidTokenIssuerPrefixes">https://sts.chinacloudapi.cn/</Item> -->
+            </Metadata>
+            <CryptographicKeys>
+                <Key Id="client_secret" StorageReferenceId="B2C_1A_AADAppMultiTenantSecret"/>
+            </CryptographicKeys>
+            <OutputClaims>
+                <OutputClaim ClaimTypeReferenceId="issuerUserId" PartnerClaimType="oid"/>
+                <OutputClaim ClaimTypeReferenceId="givenName" PartnerClaimType="given_name" />
+                <OutputClaim ClaimTypeReferenceId="surName" PartnerClaimType="family_name" />
+                <OutputClaim ClaimTypeReferenceId="displayName" PartnerClaimType="name" />
+                <OutputClaim ClaimTypeReferenceId="authenticationSource" DefaultValue="socialIdpAuthentication" AlwaysUseDefaultValue="true" />
+                <OutputClaim ClaimTypeReferenceId="identityProvider" PartnerClaimType="iss" />
+            </OutputClaims>
+            <OutputClaimsTransformations>
+                <OutputClaimsTransformation ReferenceId="CreateRandomUPNUserName"/>
+                <OutputClaimsTransformation ReferenceId="CreateUserPrincipalName"/>
+                <OutputClaimsTransformation ReferenceId="CreateAlternativeSecurityId"/>
+                <OutputClaimsTransformation ReferenceId="CreateSubjectClaimFromAlternativeSecurityId"/>
+            </OutputClaimsTransformations>
+            <UseTechnicalProfileForSessionManagement ReferenceId="SM-SocialLogin"/>
+            </TechnicalProfile>
+        </TechnicalProfiles>
+    </ClaimsProvider>
+
+</ClaimsProviders>
+
+  <UserJourneys>
+
+    <UserJourney Id="MultiTenantSignUpOrSignIn">
+      <OrchestrationSteps>
+
+        <OrchestrationStep Order="1" Type="CombinedSignInAndSignUp" ContentDefinitionReferenceId="api.signuporsignin">
+          <!--The ClaimsProviderSelections element contains a list of identity providers that a user can sign in with. The order of the elements controls the order of the sign-in buttons presented to the user. -->
+          <ClaimsProviderSelections>
+            <!--<ClaimsProviderSelection ValidationClaimsExchangeId="LocalAccountSigninEmailExchange" />-->
+            <ClaimsProviderSelection TargetClaimsExchangeId="AzureADCommonExchange" />
+          </ClaimsProviderSelections>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="LocalAccountSigninEmailExchange" TechnicalProfileReferenceId="SelfAsserted-LocalAccountSignin-Email" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+
+        <OrchestrationStep Order="2" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+              <Value>objectId</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AzureADCommonExchange" TechnicalProfileReferenceId="MultiTenant-AADCommon-OpenIdConnect" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+
+        <!-- For social IDP authentication, attempt to find the user account in the directory. -->
+        <OrchestrationStep Order="3" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>authenticationSource</Value>
+              <Value>localAccountAuthentication</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AADUserReadUsingAlternativeSecurityId" TechnicalProfileReferenceId="AAD-UserReadUsingAlternativeSecurityId-NoError" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+
+        <!-- Show self-asserted page only if the directory does not have the user account already (i.e. we do not have an objectId). 
+          This can only happen when authentication happened using a social IDP. If local account was created or authentication done
+          using ESTS in step 2, then an user account must exist in the directory by this time. -->
+        <OrchestrationStep Order="4" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+              <Value>objectId</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-Social" TechnicalProfileReferenceId="SelfAsserted-Social" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+
+        <!-- This step reads any user attributes that we may not have received when authenticating using ESTS so they can be sent 
+          in the token. -->
+        <OrchestrationStep Order="5" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>authenticationSource</Value>
+              <Value>socialIdpAuthentication</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AADUserReadWithObjectId" TechnicalProfileReferenceId="AAD-UserReadUsingObjectId" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <!-- The previous step (SelfAsserted-Social) could have been skipped if there were no attributes to collect 
+             from the user. So, in that case, create the user in the directory if one does not already exist 
+             (verified using objectId which would be set from the last step if account was created in the directory. -->
+        <OrchestrationStep Order="6" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+              <Value>objectId</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AADUserWrite" TechnicalProfileReferenceId="AAD-UserWriteUsingAlternativeSecurityId" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+ 
+        <OrchestrationStep Order="7" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
+ 
+
+      </OrchestrationSteps>
+      <ClientDefinition ReferenceId="DefaultWeb" />
+    </UserJourney>
+
+  </UserJourneys>
+
+  <RelyingParty>
+    <DefaultUserJourney ReferenceId="MultiTenantSignUpOrSignIn" />
+
+    <UserJourneyBehaviors>
+    <JourneyInsights TelemetryEngine="ApplicationInsights" 
+    InstrumentationKey="06658eaf-323a-cb62-a23b-d81f1f2a4242" 
+    DeveloperMode="true" ClientEnabled="true" ServerEnabled="true" TelemetryVersion="1.0.0" />
+    </UserJourneyBehaviors>
+
+    <TechnicalProfile Id="PolicyProfile">
+      <DisplayName>PolicyProfile</DisplayName>
+      <Protocol Name="OpenIdConnect" />
+      <OutputClaims>
+        <OutputClaim ClaimTypeReferenceId="displayName" />
+        <OutputClaim ClaimTypeReferenceId="givenName" />
+        <OutputClaim ClaimTypeReferenceId="surname" />
+        <!--<OutputClaim ClaimTypeReferenceId="email" />-->
+        <OutputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="sub"/>
+        <OutputClaim ClaimTypeReferenceId="tenantId" AlwaysUseDefaultValue="true" DefaultValue="{Policy:TenantObjectId}" />
+
+      </OutputClaims>
+      <SubjectNamingInfo ClaimType="sub" />
+    </TechnicalProfile>
+  </RelyingParty>
+
+
+</TrustFrameworkPolicy>
