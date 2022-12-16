@@ -138,7 +138,7 @@ https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/
             <Metadata>
                 <Item Key="METADATA">https://login.chinacloudapi.cn/common/.well-known/openid-configuration</Item>
                 <!-- Update the Client ID below to the Application ID -->
-                <Item Key="client_id">96ff1843-f8bb-4f83-a9c7-aac7c51c9f22</Item>
+                <Item Key="client_id">96ff1843-xxxx-xxxx-xxxx-aac7c51c9f22</Item>
                 <Item Key="response_types">code</Item>
                 <Item Key="scope">openid profile</Item>
                 <Item Key="response_mode">form_post</Item>
