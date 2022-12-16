@@ -122,3 +122,53 @@ https://docs.microsoft.com/en-us/azure/active-directory-b2c/social-transformatio
 https://stackoverflow.com/questions/57109641/linking-multiple-social-accounts-to-azur-b2c-local-account-through-custom-polici
 
 https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/blob/main/SocialAccounts/TrustFrameworkBase.xml#L458
+
+
+## Multi-tenant Sign In in China B2C
+
+```xml
+<ClaimsProvider>
+        <Domain>MultiTenant-AAD</Domain>
+        <DisplayName>Common AAD</DisplayName>
+        <TechnicalProfiles>
+            <TechnicalProfile Id="MultiTenant-AADCommon-OpenIdConnect">
+            <DisplayName>Multi-Tenant AAD</DisplayName>
+            <Description>Login with your mcpod/aadfederation account</Description>
+            <Protocol Name="OpenIdConnect"/>
+            <Metadata>
+                <Item Key="METADATA">https://login.chinacloudapi.cn/common/.well-known/openid-configuration</Item>
+                <!-- Update the Client ID below to the Application ID -->
+                <Item Key="client_id">96ff1843-f8bb-4f83-a9c7-aac7c51c9f22</Item>
+                <Item Key="response_types">code</Item>
+                <Item Key="scope">openid profile</Item>
+                <Item Key="response_mode">form_post</Item>
+                <Item Key="HttpBinding">POST</Item>
+                <Item Key="UsePolicyInRedirectUri">false</Item>
+                <Item Key="DiscoverMetadataByTokenIssuer">true</Item>
+                <!-- The key below allows you to specify each of the Azure AD tenants that can be used to sign in. Update the GUIDs below for each tenant. -->
+                <Item Key="ValidTokenIssuerPrefixes">https://sts.chinacloudapi.cn/954ddad8-xxxx-xxxx-xxxx-1316152d9587,https://sts.chinacloudapi.cn/97195526-xxxx-xxxx-xxxx-36faa3980a03</Item>
+                <!-- The commented key below specifies that users from any tenant can sign-in. Uncomment if you would like anyone with an Azure AD account to be able to sign in. -->
+                <!-- <Item Key="ValidTokenIssuerPrefixes">https://sts.chinacloudapi.cn/</Item> -->
+            </Metadata>
+            <CryptographicKeys>
+                <Key Id="client_secret" StorageReferenceId="B2C_1A_AADAppMultiTenantSecret"/>
+            </CryptographicKeys>
+            <OutputClaims>
+                <OutputClaim ClaimTypeReferenceId="issuerUserId" PartnerClaimType="oid"/>
+                <OutputClaim ClaimTypeReferenceId="givenName" PartnerClaimType="given_name" />
+                <OutputClaim ClaimTypeReferenceId="surName" PartnerClaimType="family_name" />
+                <OutputClaim ClaimTypeReferenceId="displayName" PartnerClaimType="name" />
+                <OutputClaim ClaimTypeReferenceId="authenticationSource" DefaultValue="socialIdpAuthentication" AlwaysUseDefaultValue="true" />
+                <OutputClaim ClaimTypeReferenceId="identityProvider" PartnerClaimType="iss" />
+            </OutputClaims>
+            <OutputClaimsTransformations>
+                <OutputClaimsTransformation ReferenceId="CreateRandomUPNUserName"/>
+                <OutputClaimsTransformation ReferenceId="CreateUserPrincipalName"/>
+                <OutputClaimsTransformation ReferenceId="CreateAlternativeSecurityId"/>
+                <OutputClaimsTransformation ReferenceId="CreateSubjectClaimFromAlternativeSecurityId"/>
+            </OutputClaimsTransformations>
+            <UseTechnicalProfileForSessionManagement ReferenceId="SM-SocialLogin"/>
+            </TechnicalProfile>
+        </TechnicalProfiles>
+    </ClaimsProvider>
+```
